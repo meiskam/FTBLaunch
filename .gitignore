@@ -3,6 +3,7 @@ bin/
 .metadata/
 *.jardesc
 ftblaunch.cfg
+ftdojolaunch.cfg
 target/
 /target/
 #eclipse

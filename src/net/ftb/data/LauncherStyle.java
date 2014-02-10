@@ -13,6 +13,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * This file was edited by meiskam <meiskam@gmail.com>
  */
 package net.ftb.data;
 
@@ -87,7 +89,7 @@ public class LauncherStyle extends Properties {
 		this.filterInnerTextColor = loadColor("filterInnerTextColor", this.filterInnerTextColor);
 		
 		try {
-			this.store(new FileOutputStream(filename), "FTB Style File");
+			this.store(new FileOutputStream(filename), "FTD Style File");
 		} catch (FileNotFoundException e) {
 			Logger.logWarn("Could not save style", e);
 		} catch (IOException e) {

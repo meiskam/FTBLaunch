@@ -13,6 +13,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * This file was edited by meiskam <meiskam@gmail.com>
  */
 package net.ftb.gui;
 
@@ -54,7 +56,7 @@ import net.ftb.tools.PastebinPoster;
 
 @SuppressWarnings("serial")
 public class LauncherConsole extends JFrame implements ILogListener {
-	private final static String launcherLogFile = "FTBLauncherLog.txt";
+	private final static String launcherLogFile = "FTDojoLauncherLog.txt";
 	private final static String minecraftLogFile = "MinecraftLog.txt";
 	private final JEditorPane displayArea;
 	private final HTMLEditorKit kit;
@@ -158,7 +160,7 @@ public class LauncherConsole extends JFrame implements ILogListener {
 				if (Desktop.isDesktopSupported()) {
 					Desktop desktop = Desktop.getDesktop();
 					try {
-						desktop.browse(new URI("http://desk.feed-the-beast.com/"));
+						desktop.browse(new URI("http://launcher.feed-the-dojo.com/support/"));
 					} catch (Exception exc) {
 						Logger.logError("Could not open url: " + exc.getMessage());
 					}

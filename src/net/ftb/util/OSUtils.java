@@ -13,6 +13,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * This file was edited by meiskam <meiskam@gmail.com>
  */
 package net.ftb.util;
 
@@ -61,7 +63,7 @@ public class OSUtils {
 			Logger.logError(e.getMessage(), e);
 		}
 		Logger.logWarn("Failed to get path for current directory - falling back to user's home directory.");
-		return System.getProperty("user.dir") + "//FTB Pack Install";
+		return System.getProperty("user.dir") + "//FTD_Pack_Install";
 	}
 
 	/**
@@ -71,11 +73,11 @@ public class OSUtils {
 	public static String getDynamicStorageLocation() {
 		switch(getCurrentOS()) {
 		case WINDOWS:
-			return System.getenv("APPDATA") + "/ftblauncher/";
+			return System.getenv("APPDATA") + "/ftdojolauncher/";
 		case MACOSX:
-			return cachedUserHome + "/Library/Application Support/ftblauncher/";
+			return cachedUserHome + "/Library/Application Support/ftdojolauncher/";
 		case UNIX:
-			return cachedUserHome + "/.ftblauncher/";
+			return cachedUserHome + "/.ftdojolauncher/";
 		default:
 			return getDefInstallPath() + "/temp/";
 		}

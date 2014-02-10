@@ -13,6 +13,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * This file was edited by meiskam <meiskam@gmail.com>
  */
 package net.ftb.gui.panes;
 
@@ -70,7 +72,7 @@ public class NewsPane extends JPanel implements ILauncherPane {
 	@Override
 	public void onVisible() {
 		try {
-			news.setPage("http://launcher.feed-the-beast.com/news.php");
+			news.setPage("http://launcher.feed-the-dojo.incraftion.com/news/");
 			Settings.getSettings().setNewsDate();
 			Settings.getSettings().save();
 			LaunchFrame.getInstance().setNewsIcon();

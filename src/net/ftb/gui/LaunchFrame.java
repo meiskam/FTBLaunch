@@ -13,6 +13,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * This file was edited by meiskam <meiskam@gmail.com>
  */
 package net.ftb.gui;
 
@@ -157,7 +159,7 @@ public class LaunchFrame extends JFrame {
 	public static LauncherConsole con;
 	public static String tempPass = "";
 	public static Panes currentPane = Panes.MODPACK;
-	public static JGoogleAnalyticsTracker tracker = new JGoogleAnalyticsTracker(new AnalyticsConfigData("UA-37330489-2"), GoogleAnalyticsVersion.V_4_7_2);
+	public static JGoogleAnalyticsTracker tracker = new JGoogleAnalyticsTracker(new AnalyticsConfigData("UA-30582182-2"), GoogleAnalyticsVersion.V_4_7_2);
 
 	public static final String FORGENAME = "MinecraftForge.zip";
 
@@ -177,8 +179,8 @@ public class LaunchFrame extends JFrame {
 		tracker.setEnabled(true);
 		TrackerUtils.sendPageView("net/ftb/gui/LaunchFrame.java", "Launcher Start v" + version);
 
-		if(new File(Settings.getSettings().getInstallPath(), "FTBLauncherLog.txt").exists()) {
-			new File(Settings.getSettings().getInstallPath(), "FTBLauncherLog.txt").delete();
+		if(new File(Settings.getSettings().getInstallPath(), "FTDojoLauncherLog.txt").exists()) {
+			new File(Settings.getSettings().getInstallPath(), "FTDojoLauncherLog.txt").delete();
 		}
 
 		if(new File(Settings.getSettings().getInstallPath(), "MinecraftLog.txt").exists()) {
@@ -188,7 +190,7 @@ public class LaunchFrame extends JFrame {
 		DownloadUtils thread = new DownloadUtils();
 		thread.start();
 		
-		Logger.logInfo("FTBLaunch starting up (version "+ version + ")");
+		Logger.logInfo("FTDojoLaunch starting up (version "+ version + ")");
 		Logger.logInfo("Java version: "+System.getProperty("java.version"));
 		Logger.logInfo("Java vendor: "+System.getProperty("java.vendor"));
 		Logger.logInfo("Java home: "+System.getProperty("java.home"));
@@ -319,7 +321,7 @@ public class LaunchFrame extends JFrame {
 	public LaunchFrame(final int tab) {
 		setFont(new Font("a_FuturaOrto", Font.PLAIN, 12));
 		setResizable(false);
-		setTitle("Feed the Beast Launcher v" + version);
+		setTitle("Feed the Dojo Launcher v" + version);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/image/logo_ftb.png")));
 
 		panel = new JPanel();
@@ -346,7 +348,7 @@ public class LaunchFrame extends JFrame {
 		footerLogo.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent event) {
-				OSUtils.browse("http://www.feed-the-beast.com");
+				OSUtils.browse("http://feed-the-dojo.incraftion.com/");
 			}
 		});
 
@@ -355,7 +357,7 @@ public class LaunchFrame extends JFrame {
 		footerCreeper.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent event) {
-				OSUtils.browse("http://www.creeperhost.net/aff.php?aff=293");
+				OSUtils.browse("http://feed-the-dojo.incraftion.com/affiliate/293/");
 			}
 		});
 
@@ -1592,7 +1594,7 @@ public class LaunchFrame extends JFrame {
 		int i = 0;
 		BufferedReader reader = null;
 		try {
-			reader = new BufferedReader(new InputStreamReader(new URL("http://launcher.feed-the-beast.com/newsupdate.php").openStream()));
+			reader = new BufferedReader(new InputStreamReader(new URL("http://launcher.feed-the-dojo.incraftion.com/newsupdate.php").openStream()));
 			ArrayList<Long> timeStamps = new ArrayList<Long>();
 			String s = reader.readLine();
 			s = s.trim();

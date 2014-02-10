@@ -13,6 +13,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * This file was edited by meiskam <meiskam@gmail.com>
  */
 package net.ftb.data;
 
@@ -47,7 +49,7 @@ public class Settings extends Properties {
 
 	static {
 		try {
-			settings = new Settings(new File(OSUtils.getDynamicStorageLocation(), "ftblaunch.cfg"));
+			settings = new Settings(new File(OSUtils.getDynamicStorageLocation(), "ftdojolaunch.cfg"));
 		} catch (IOException e) {
 			Logger.logError("Failed to load settings", e);
 		}
@@ -68,14 +70,14 @@ public class Settings extends Properties {
 
 	public void save() {
 		try {
-			store(new FileOutputStream(configFile), "FTBLaunch Config File");
+			store(new FileOutputStream(configFile), "FTDojoLaunch Config File");
 		} catch (IOException e) {
 			Logger.logError("Failed to save settings", e);
 		}
 	}
 
 	public String getRamMax() {
-		return getProperty("ramMax", Integer.toString(1024));
+		return getProperty("ramMax", Integer.toString(2048));
 	}
 
 	public void setRamMax(String max) {

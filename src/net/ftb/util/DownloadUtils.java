@@ -13,6 +13,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * This file was edited by meiskam <meiskam@gmail.com>
  */
 package net.ftb.util;
 
@@ -48,7 +50,7 @@ public class DownloadUtils extends Thread {
 	 * @throws NoSuchAlgorithmException - see md5
 	 */
 	public static String getCreeperhostLink(String file) throws NoSuchAlgorithmException {
-		String resolved = (downloadServers.containsKey(Settings.getSettings().getDownloadServer())) ? "http://" + downloadServers.get(Settings.getSettings().getDownloadServer()) : "http://new.creeperrepo.net";
+		String resolved = (downloadServers.containsKey(Settings.getSettings().getDownloadServer())) ? "http://" + downloadServers.get(Settings.getSettings().getDownloadServer()) : "http://repo.feed-the-dojo.incraftion.com";
 		resolved += "/FTB2/" + file;
 		HttpURLConnection connection = null;
 		try {
@@ -71,7 +73,7 @@ public class DownloadUtils extends Thread {
 	 * @return - the direct link
 	 */
 	public static String getStaticCreeperhostLink(String file) {
-		String resolved = (downloadServers.containsKey(Settings.getSettings().getDownloadServer())) ? "http://" + downloadServers.get(Settings.getSettings().getDownloadServer()) : "http://new.creeperrepo.net";
+		String resolved = (downloadServers.containsKey(Settings.getSettings().getDownloadServer())) ? "http://" + downloadServers.get(Settings.getSettings().getDownloadServer()) : "http://repo.feed-the-dojo.incraftion.com";
 		resolved += "/FTB2/static/" + file;
 		HttpURLConnection connection = null;
 		try {
@@ -110,7 +112,7 @@ public class DownloadUtils extends Thread {
 	 */
 	public static boolean fileExists(String file) {
 		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(new URL("http://new.creeperrepo.net/FTB2/" + file).openStream()));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(new URL("http://repo.feed-the-dojo.incraftion.com/FTB2/" + file).openStream()));
 			return !reader.readLine().toLowerCase().contains("not found");
 		} catch (Exception e) {
 			return false;
@@ -164,7 +166,7 @@ public class DownloadUtils extends Thread {
 		Logger.logInfo("Issue with new md5 method, attempting to use backup method.");
 		String content = null;
 		Scanner scanner = null;
-		String resolved = (downloadServers.containsKey(Settings.getSettings().getDownloadServer())) ? "http://" + downloadServers.get(Settings.getSettings().getDownloadServer()) : "http://new.creeperrepo.net";
+		String resolved = (downloadServers.containsKey(Settings.getSettings().getDownloadServer())) ? "http://" + downloadServers.get(Settings.getSettings().getDownloadServer()) : "http://repo.feed-the-dojo.incraftion.com";
 		resolved += "/md5/FTB2/" + url;
 		HttpURLConnection connection = null;
 		try {
@@ -245,11 +247,11 @@ public class DownloadUtils extends Thread {
 	 */
 	@Override
 	public void run() {
-		downloadServers.put("Automatic", "new.creeperrepo.net");
+		downloadServers.put("Automatic", "repo.feed-the-dojo.incraftion.com");
 		BufferedReader in = null;
 		// New Servers
 		try {
-			in = new BufferedReader(new InputStreamReader(new URL("http://new.creeperrepo.net/edges.json").openStream()));
+			in = new BufferedReader(new InputStreamReader(new URL("http://repo.feed-the-dojo.incraftion.com/edges.json").openStream()));
 			String line;
 			while((line = in.readLine()) != null) { // Hacky JSON parsing because this will all be gone soon (TM)
 				line = line.replace("{", "").replace("}", "").replace("\"", "");
@@ -274,7 +276,7 @@ public class DownloadUtils extends Thread {
 		
 		// Backup md5 servers
 		try {
-			in = new BufferedReader(new InputStreamReader(new URL("http://www.creeperrepo.net/mirrors").openStream()));
+			in = new BufferedReader(new InputStreamReader(new URL("http://feed-the-dojo.incraftion.com/mirrors").openStream()));
 			String line;
 			while((line = in.readLine()) != null) {
 				String[] splitString = line.split(",");

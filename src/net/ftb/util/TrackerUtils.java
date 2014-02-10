@@ -13,6 +13,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * This file was edited by meiskam <meiskam@gmail.com>
  */
 package net.ftb.util;
 
@@ -24,7 +26,7 @@ public class TrackerUtils {
 
 	public static void sendPageView(String pageUrl, String pageTitle) {
 		if(!Settings.getSettings().getSnooper()) {
-			LaunchFrame.tracker.trackPageViewFromReferrer(pageUrl, pageTitle, "Feed The Beast", "http://www.feed-the-beast.com", "/");
+			LaunchFrame.tracker.trackPageViewFromReferrer(pageUrl, pageTitle, "Feed The Dojo", "http://feed-the-dojo.incraftion.com", "/");
 		}
 	}
 }

@@ -13,6 +13,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * This file was edited by meiskam <meiskam@gmail.com>
  */
 package net.ftb.tools;
 
@@ -47,7 +49,7 @@ public class PastebinPoster extends Thread {
 			out = conn.getOutputStream();
 
 			out.write(("api_option=paste"
-					+ "&api_dev_key=" + URLEncoder.encode("9a4b85f815457ff6a512c6abad06ea24", "utf-8")
+					+ "&api_dev_key=" + URLEncoder.encode("e844870e5ab6ddafdeb1b685510973b4", "utf-8")
 					+ "&api_paste_code=" + URLEncoder.encode(Logger.getLogs(), "utf-8")
 					+ "&api_paste_private=" + URLEncoder.encode("0", "utf-8")
 					+ "&api_paste_name=" + URLEncoder.encode("", "utf-8")
