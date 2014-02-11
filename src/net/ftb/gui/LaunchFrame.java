@@ -471,7 +471,7 @@ public class LaunchFrame extends JFrame {
 			public void actionPerformed(ActionEvent event) {
 				if(mapsPane.mapPanels.size() > 0 && getSelectedMapIndex() >= 0) {
 					try {
-						OSUtils.browse(DownloadUtils.getCreeperhostLink("maps%5E" + Map.getMap(LaunchFrame.getSelectedMapIndex()).getMapName() + "%5E" + Map.getMap(LaunchFrame.getSelectedMapIndex()).getVersion() + "%5E" + Map.getMap(LaunchFrame.getSelectedMapIndex()).getUrl()));
+						OSUtils.browse(DownloadUtils.getCreeperhostLink("maps/" + Map.getMap(LaunchFrame.getSelectedMapIndex()).getMapName() + "/" + Map.getMap(LaunchFrame.getSelectedMapIndex()).getVersion() + "/" + Map.getMap(LaunchFrame.getSelectedMapIndex()).getUrl()));
 					} catch (NoSuchAlgorithmException e) { }
 				}
 			}
@@ -1594,7 +1594,7 @@ public class LaunchFrame extends JFrame {
 		int i = 0;
 		BufferedReader reader = null;
 		try {
-			reader = new BufferedReader(new InputStreamReader(new URL("http://launcher.feed-the-dojo.incraftion.com/newsupdate.php").openStream()));
+			reader = new BufferedReader(new InputStreamReader(new URL("http://launcher.feed-the-dojo.incraftion.com/newsupdate/").openStream()));
 			ArrayList<Long> timeStamps = new ArrayList<Long>();
 			String s = reader.readLine();
 			s = s.trim();

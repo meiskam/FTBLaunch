@@ -179,7 +179,7 @@ public class DownloadUtils extends Thread {
 			}
 			if(response != 200 || (content == null || content.isEmpty())) {
 				for(String server : backupServers.values()) {
-					resolved = "http://" + server + "/md5/FTB2/" + url.replace("/", "%5E");
+					resolved = "http://" + server + "/md5/FTB2/" + url;//.replace("/", "%5E");
 					connection = (HttpURLConnection) new URL(resolved).openConnection();
 					response = connection.getResponseCode();
 					if(response == 200) {
