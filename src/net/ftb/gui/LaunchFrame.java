@@ -357,7 +357,7 @@ public class LaunchFrame extends JFrame {
 		footerCreeper.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent event) {
-				OSUtils.browse("http://feed-the-dojo.incraftion.com/affiliate/293/");
+				OSUtils.browse("http://feed-the-dojo.incraftion.com/affiliate/293");
 			}
 		});
 
@@ -1594,7 +1594,7 @@ public class LaunchFrame extends JFrame {
 		int i = 0;
 		BufferedReader reader = null;
 		try {
-			reader = new BufferedReader(new InputStreamReader(new URL("http://launcher.feed-the-dojo.incraftion.com/newsupdate/").openStream()));
+			reader = new BufferedReader(new InputStreamReader(new URL("http://launcher.feed-the-dojo.incraftion.com/newsupdate").openStream()));
 			ArrayList<Long> timeStamps = new ArrayList<Long>();
 			String s = reader.readLine();
 			s = s.trim();

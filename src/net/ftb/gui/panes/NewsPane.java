@@ -72,7 +72,7 @@ public class NewsPane extends JPanel implements ILauncherPane {
 	@Override
 	public void onVisible() {
 		try {
-			news.setPage("http://launcher.feed-the-dojo.incraftion.com/news/");
+			news.setPage("http://launcher.feed-the-dojo.incraftion.com/news");
 			Settings.getSettings().setNewsDate();
 			Settings.getSettings().save();
 			LaunchFrame.getInstance().setNewsIcon();

@@ -160,7 +160,7 @@ public class LauncherConsole extends JFrame implements ILogListener {
 				if (Desktop.isDesktopSupported()) {
 					Desktop desktop = Desktop.getDesktop();
 					try {
-						desktop.browse(new URI("http://launcher.feed-the-dojo.com/support/"));
+						desktop.browse(new URI("http://launcher.feed-the-dojo.incraftion.com/support"));
 					} catch (Exception exc) {
 						Logger.logError("Could not open url: " + exc.getMessage());
 					}
