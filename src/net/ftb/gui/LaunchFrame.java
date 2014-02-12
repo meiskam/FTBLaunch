@@ -159,7 +159,7 @@ public class LaunchFrame extends JFrame {
 	public static LauncherConsole con;
 	public static String tempPass = "";
 	public static Panes currentPane = Panes.MODPACK;
-	public static JGoogleAnalyticsTracker tracker = new JGoogleAnalyticsTracker(new AnalyticsConfigData("UA-30582182-2"), GoogleAnalyticsVersion.V_4_7_2);
+	public static JGoogleAnalyticsTracker tracker = new JGoogleAnalyticsTracker(new AnalyticsConfigData("UA-30582182-3"), GoogleAnalyticsVersion.V_4_7_2);
 
 	public static final String FORGENAME = "MinecraftForge.zip";
 
