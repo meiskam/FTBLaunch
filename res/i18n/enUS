@@ -1,7 +1,7 @@
 LOCALE_NAME = English
 LOCALE_LOADED = English language file loaded!
 
-# Footer #
+# Footer
 DONATE_BUTTON = Donate
 
 # Main Tab
@@ -10,6 +10,13 @@ LAUNCH_BUTTON = Launch
 PROFILE_CREATE = Create Profile
 PROFILE_SELECT = Select Profile
 DOWNLOAD_SERVER_PACK = Download Server ModPack
+
+# Console
+CONSOLE_TITLE = Console
+CONSOLE_COPYCLIP = Copy log to clipboard
+CONSOLE_CLIP_CONFIRM = Do you want to copy the full log to your clipboard?
+CONSOLE_PASTEBIN = Paste my log to pastebin.com
+CONSOLE_SUPPORT = Need support? Click me!
 
 # Map Tab
 INSTALL_MAP = Install Map
@@ -59,6 +66,7 @@ ADVANCED_OPTIONS_MCWINDOW_SIZE = Minecraft Window Size:
 ADVANCED_OPTIONS_MCWINDOW_POS = Minecraft Window Position:
 ADVANCED_OPTIONS_MCWINDOW_AUTOMAXCHECK = Auto Maximised?
 ADVANCED_OPTIONS_DISABLEGOOGLEANALYTICS = Disable Google Analytic Tracking
+ADVANCED_OPTIONS_JAVA_PATH = Java Path:
 ADVANCED_OPTIONS_ADDJAVAOPTIONS = Additional Java Parameters:
 ADVANCED_OPTIONS_DEBUGLAUNCHERVERBOSE = Extra Launcher Debugging
 

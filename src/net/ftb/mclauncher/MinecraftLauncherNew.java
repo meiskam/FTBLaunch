@@ -26,7 +26,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -35,76 +34,64 @@ import net.feed_the_beast.launcher.json.JsonFactory;
 import net.feed_the_beast.launcher.json.assets.AssetIndex;
 import net.feed_the_beast.launcher.json.assets.AssetIndex.Asset;
 import net.feed_the_beast.launcher.json.versions.OS;
+import net.ftb.data.ModPack;
 import net.ftb.data.Settings;
 import net.ftb.log.LogLevel;
 import net.ftb.log.Logger;
 import net.ftb.util.DownloadUtils;
 import net.ftb.util.FileUtils;
 import net.ftb.util.OSUtils;
-import net.ftb.util.winreg.JavaFinder;
 
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 
-public class MinecraftLauncherNew
-{
-	public static Process launchMinecraft(File gameDir, File assetDir, File nativesDir, 
-	        List<File> classpath,
-	        String username, String password,
-	        String mainClass, String args, String assetIndex,
-	        String rmax, String maxPermSize,
-	        String version) throws IOException
-    {
-	    
-	    assetDir = syncAssets(assetDir, assetIndex);
-	    
-		StringBuilder cpb = new StringBuilder("");
-		for (File f : classpath)
-		{
+public class MinecraftLauncherNew {
+    public static Process launchMinecraft (String javaPath, File gameDir, File assetDir, File nativesDir, List<File> classpath, String username, String password, String mainClass, String args, String assetIndex,
+            String rmax, String maxPermSize, String version, String auth_UUID) throws IOException {
+
+        assetDir = syncAssets(assetDir, assetIndex);
+
+        StringBuilder cpb = new StringBuilder("");
+        for (File f : classpath) {
             cpb.append(OSUtils.getJavaDelimiter());
-		    cpb.append(f.getAbsolutePath());
-		}
+            cpb.append(f.getAbsolutePath());
+        }
 
-		List<String> arguments = new ArrayList<String>();
+        List<String> arguments = new ArrayList<String>();
 
-		String separator = System.getProperty("file.separator");
-		String path = new String();
-		if (OS.CURRENT == OS.WINDOWS && JavaFinder.parseWinJavaVersion().path != null)
-		    path = JavaFinder.parseWinJavaVersion().path.replace(".exe", "w.exe");
-		else
-		    path = System.getProperty("java.home") + ("/bin/java" + (OS.CURRENT == OS.WINDOWS ? "w" : "")).replace("/", separator);
-		Logger.logInfo("Java Path: " + path);
-		arguments.add(path);
+        Logger.logInfo("Java Path: " + javaPath);
+        Logger.logInfo("Pack: " + ModPack.getSelectedPack().getName() + " " + ModPack.getSelectedPack().getVersion());
+        arguments.add(javaPath);
 
-		setMemory(arguments, rmax);
-		
-	    if(OSUtils.getCurrentOS().equals(OS.WINDOWS)) {
+        setMemory(arguments, rmax);
+
+        if (OSUtils.getCurrentOS().equals(OS.WINDOWS)) {
             String arch = System.getenv("PROCESSOR_ARCHITECTURE");
             String wow64Arch = System.getenv("PROCESSOR_ARCHITEW6432");
-            if(!(arch.endsWith("64") || (wow64Arch != null && wow64Arch.endsWith("64")))) {
-	            if(maxPermSize == null || maxPermSize.isEmpty()) {
-	                if(OSUtils.getOSTotalMemory() > 2046) {
-	                    maxPermSize = "192m";
-	                    Logger.logInfo("Defaulting PermSize to 192m");
-	                } else {
-	                    maxPermSize = "128m";
-	                    Logger.logInfo("Defaulting PermSize to 128m");
-	                }
-	            }
-	        }
-	    }
-	    
-        if(maxPermSize == null || maxPermSize.isEmpty()) {
-        	// 64-bit or Non-Windows
-        	maxPermSize = "256m";
+            if (!(arch.endsWith("64") || (wow64Arch != null && wow64Arch.endsWith("64")))) {
+                if (maxPermSize == null || maxPermSize.isEmpty()) {
+                    if (OSUtils.getOSTotalMemory() > 2046) {
+                        maxPermSize = "192m";
+                        Logger.logInfo("Defaulting PermSize to 192m");
+                    } else {
+                        maxPermSize = "128m";
+                        Logger.logInfo("Defaulting PermSize to 128m");
+                    }
+                }
+            }
+        }
+
+        if (maxPermSize == null || maxPermSize.isEmpty()) {
+            // 64-bit or Non-Windows
+            maxPermSize = "256m";
             Logger.logInfo("Defaulting PermSize to 256m");
         }
-		
-		//arguments.add("-XX:+UseConcMarkSweepGC");
-		//arguments.add("-XX:+CMSIncrementalMode");
-		//arguments.add("-XX:+AggressiveOpts");
-		//arguments.add("-XX:+CMSClassUnloadingEnabled");
-		arguments.add("-XX:PermSize=" + maxPermSize);
+
+        //arguments.add("-XX:+UseConcMarkSweepGC");
+        //arguments.add("-XX:+CMSIncrementalMode");
+        //arguments.add("-XX:+AggressiveOpts");
+        //arguments.add("-XX:+CMSClassUnloadingEnabled");
+        arguments.add("-XX:PermSize=" + maxPermSize);
         arguments.add("-Dorg.lwjgl.librarypath=" + nativesDir.getAbsolutePath());
         arguments.add("-Dnet.java.games.input.librarypath=" + nativesDir.getAbsolutePath());
         arguments.add("-Duser.home=" + gameDir.getParentFile().getAbsolutePath());
@@ -112,182 +99,192 @@ public class MinecraftLauncherNew
         // Use IPv4 when possible, only use IPv6 when connecting to IPv6 only addresses
         arguments.add("-Djava.net.preferIPv4Stack=true");
 
-		arguments.add("-cp");
-		arguments.add(System.getProperty("java.class.path") + cpb.toString());
-		
-		String additionalOptions = Settings.getSettings().getAdditionalJavaOptions();
-		if (!additionalOptions.isEmpty()) {
- 			Collections.addAll(arguments, additionalOptions.split("\\s+"));
- 		}
+        //Due to this being bugged in vanilla, and likely to cause crashes,
+        //this will not be enabled until it can be tested with the first 1.7.x test packs
+        /* if (Settings.getSettings().getLastExtendedState() == JFrame.MAXIMIZED_BOTH) {
+             arguments.add("--fullscreen true");
+             Logger.logInfo("fullscreen");
+         }*/
 
-		arguments.add(mainClass);
-		for (String s : args.split(" "))
-		{
-	        if (s.equals("${auth_player_name}"   )) arguments.add(username);
-	        else if (s.equals("${auth_session}"  )) arguments.add(password);
-    		else if (s.equals("${version_name}"  )) arguments.add(version);
-    		else if (s.equals("${game_directory}")) arguments.add(gameDir.getAbsolutePath());
-    		else if (s.equals("${game_assets}"   )) arguments.add(assetDir.getAbsolutePath());
-    		else arguments.add(s);
-		}
+        arguments.add("-cp");
+        arguments.add(System.getProperty("java.class.path") + cpb.toString());
 
-		ProcessBuilder builder = new ProcessBuilder(arguments);
-		//StringBuilder tmp = new StringBuilder();
-		//for (String a : builder.command()) tmp.append(a).append(' ');
-		//Logger.logInfo("Launching: " + tmp.toString());		
-		builder.directory(gameDir);
-		builder.redirectErrorStream(true);
-		return builder.start();
-	}
+        String additionalOptions = Settings.getSettings().getAdditionalJavaOptions();
+        if (!additionalOptions.isEmpty()) {
+            Collections.addAll(arguments, additionalOptions.split("\\s+"));
+        }
 
-	private static void setMemory(List<String> arguments, String rmax) {
-		boolean memorySet = false;
-		try {
-			int min = 256;
-			if (rmax != null && Integer.parseInt(rmax) > 0) {
-				arguments.add("-Xms" + min + "M");
-				Logger.logInfo("Setting MinMemory to " + min);
-				arguments.add("-Xmx" + rmax + "M");
-				Logger.logInfo("Setting MaxMemory to " + rmax);
-				memorySet = true;
-			}
-		} catch (Exception e) {
-			Logger.logError("Error parsing memory settings", e);
-		}
-		if (!memorySet) {
-			arguments.add("-Xms" + 256 + "M");
-			Logger.logInfo("Defaulting MinMemory to " + 256);
-			arguments.add("-Xmx" + 1024 + "M");
-			Logger.logInfo("Defaulting MaxMemory to " + 1024);
-		}
-	}
+        arguments.add(mainClass);
+        for (String s : args.split(" ")) {
+            if (s.equals("${auth_player_name}"))
+                arguments.add(username);
+            else if (s.equals("${auth_session}") || s.equals("${auth_access_token}"))
+                arguments.add(password);
+            else if (s.equals("${version_name}"))
+                arguments.add(version);
+            else if (s.equals("${game_directory}"))
+                arguments.add(gameDir.getAbsolutePath());
+            else if (s.equals("${game_assets}"))
+                arguments.add(assetDir.getAbsolutePath());
+            else if (s.equals("${auth_uuid}"))
+                arguments.add(auth_UUID);
 
-	public static void main(String[] args) {
-		String basepath = args[0], animationname = args[1], forgename = args[2], username = args[3], password = args[4], modPackName = args[5], modPackImageName = args[6];
-		Settings.getSettings().save();  //Call so that the settings file is loaded from the correct location.  Would be wrong on OS X and *nix if called after user.home is reset
+            else
+                arguments.add(s);
+        }
 
-		basepath = new File(basepath).getAbsoluteFile().toString().replaceAll("[/\\\\]$", "");;
-		
-		try {
-			System.out.println("Loading jars...");
-			String[] jarFiles = new String[] {"minecraft.jar", "lwjgl.jar", "lwjgl_util.jar", "jinput.jar" };
-			ArrayList<File> classPathFiles = new ArrayList<File>();
-			File tempDir = new File(new File(basepath).getParentFile(), "instMods/");
-			if(tempDir.isDirectory()) {
-				for(String name : tempDir.list()) {
-					if(!name.equalsIgnoreCase(forgename)) {
-						if(name.toLowerCase().endsWith(".zip") || name.toLowerCase().endsWith(".jar")) {
-							classPathFiles.add(new File(tempDir, name));
-						}
-					}
-				}
-			}
+        ProcessBuilder builder = new ProcessBuilder(arguments);
+        //StringBuilder tmp = new StringBuilder();
+        //for (String a : builder.command()) tmp.append(a).append(' ');
+        //Logger.logInfo("Launching: " + tmp.toString());		
+        builder.directory(gameDir);
+        builder.redirectErrorStream(true);
+        return builder.start();
+    }
 
-			classPathFiles.add(new File(tempDir, forgename));
-			for(String jarFile : jarFiles) {
-				classPathFiles.add(new File(new File(basepath, "bin"), jarFile));
-			}	
+    private static void setMemory (List<String> arguments, String rmax) {
+        boolean memorySet = false;
+        try {
+            int min = 256;
+            if (rmax != null && Integer.parseInt(rmax) > 0) {
+                arguments.add("-Xms" + min + "M");
+                Logger.logInfo("Setting MinMemory to " + min);
+                arguments.add("-Xmx" + rmax + "M");
+                Logger.logInfo("Setting MaxMemory to " + rmax);
+                memorySet = true;
+            }
+        } catch (Exception e) {
+            Logger.logError("Error parsing memory settings", e);
+        }
+        if (!memorySet) {
+            arguments.add("-Xms" + 256 + "M");
+            Logger.logInfo("Defaulting MinMemory to " + 256);
+            arguments.add("-Xmx" + 1024 + "M");
+            Logger.logInfo("Defaulting MaxMemory to " + 1024);
+        }
+    }
 
-			URL[] urls = new URL[classPathFiles.size()];
-			for(int i = 0; i < classPathFiles.size(); i++) {
-				try {
-					urls[i] = classPathFiles.get(i).toURI().toURL();
-				} catch (MalformedURLException e) {
-					e.printStackTrace();
-				}
-				System.out.println("Added URL to classpath: " + urls[i].toString());
-			}
+    public static void main (String[] args) {
+        String basepath = args[0], animationname = args[1], forgename = args[2], username = args[3], password = args[4], modPackName = args[5], modPackImageName = args[6];
+        Settings.getSettings().save(); //Call so that the settings file is loaded from the correct location.  Would be wrong on OS X and *nix if called after user.home is reset
 
-			System.out.println("Loading natives...");
-			String nativesDir = new File(new File(basepath, "bin"), "natives").toString();
-			System.out.println("Natives loaded...");
+        basepath = new File(basepath).getAbsoluteFile().toString().replaceAll("[/\\\\]$", "");
+        ;
 
-			System.setProperty("org.lwjgl.librarypath", nativesDir);
-			System.setProperty("net.java.games.input.librarypath", nativesDir);
+        try {
+            System.out.println("Loading jars...");
+            String[] jarFiles = new String[] { "minecraft.jar", "lwjgl.jar", "lwjgl_util.jar", "jinput.jar" };
+            ArrayList<File> classPathFiles = new ArrayList<File>();
+            File tempDir = new File(new File(basepath).getParentFile(), "instMods/");
+            if (tempDir.isDirectory()) {
+                for (String name : tempDir.list()) {
+                    if (!name.equalsIgnoreCase(forgename)) {
+                        if (name.toLowerCase().endsWith(".zip") || name.toLowerCase().endsWith(".jar")) {
+                            classPathFiles.add(new File(tempDir, name));
+                        }
+                    }
+                }
+            }
 
-			System.setProperty("user.home", new File(basepath).getParent());
+            classPathFiles.add(new File(tempDir, forgename));
+            for (String jarFile : jarFiles) {
+                classPathFiles.add(new File(new File(basepath, "bin"), jarFile));
+            }
 
-			URLClassLoader cl = new URLClassLoader(urls, MinecraftLauncherNew.class.getClassLoader());
+            URL[] urls = new URL[classPathFiles.size()];
+            for (int i = 0; i < classPathFiles.size(); i++) {
+                try {
+                    urls[i] = classPathFiles.get(i).toURI().toURL();
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("Added URL to classpath: " + urls[i].toString());
+            }
 
-			System.out.println("Loading minecraft class");
-			Class<?> mc = cl.loadClass("net.minecraft.client.Minecraft");
-			System.out.println("mc = " + mc);
-			Field[] fields = mc.getDeclaredFields();
-			System.out.println("field amount: " + fields.length);
+            System.out.println("Loading natives...");
+            String nativesDir = new File(new File(basepath, "bin"), "natives").toString();
+            System.out.println("Natives loaded...");
 
-			for (Field f : fields) {
-				if (f.getType() != File.class) {
-					continue;
-				}
-				if (0 == (f.getModifiers() & (Modifier.PRIVATE | Modifier.STATIC))) {
-					continue;
-				}
-				f.setAccessible(true);
-				f.set(null, new File(basepath));
-				System.out.println("Fixed Minecraft Path: Field was " + f.toString());
-				break;
-			}
+            System.setProperty("org.lwjgl.librarypath", nativesDir);
+            System.setProperty("net.java.games.input.librarypath", nativesDir);
 
-			String mcDir = mc.getMethod("a", String.class).invoke(null, (Object) "minecraft").toString();
+            System.setProperty("user.home", new File(basepath).getParent());
 
-			System.out.println("MCDIR: " + mcDir);
+            URLClassLoader cl = new URLClassLoader(urls, MinecraftLauncherNew.class.getClassLoader());
 
-			System.out.println("Launching with applet wrapper...");
+            System.out.println("Loading minecraft class");
+            Class<?> mc = cl.loadClass("net.minecraft.client.Minecraft");
+            System.out.println("mc = " + mc);
+            Field[] fields = mc.getDeclaredFields();
+            System.out.println("field amount: " + fields.length);
 
-			try {
-				Class<?> MCAppletClass = cl.loadClass("net.minecraft.client.MinecraftApplet");
-				Applet mcappl = (Applet) MCAppletClass.newInstance();
-				MinecraftFrame mcWindow = new MinecraftFrame(modPackName, modPackImageName, animationname);
-				mcWindow.start(mcappl, username, password);
-			} catch (InstantiationException e) {
-				Logger.log("Applet wrapper failed! Falling back to compatibility mode.", LogLevel.WARN, e);
-				mc.getMethod("main", String[].class).invoke(null, (Object) new String[] {username, password});
-			}
-		} catch (Throwable t) {
-			Logger.logError("Unhandled error launching minecraft", t);
-		}
-	}
+            for (Field f : fields) {
+                if (f.getType() != File.class) {
+                    continue;
+                }
+                if (0 == (f.getModifiers() & (Modifier.PRIVATE | Modifier.STATIC))) {
+                    continue;
+                }
+                f.setAccessible(true);
+                f.set(null, new File(basepath));
+                System.out.println("Fixed Minecraft Path: Field was " + f.toString());
+                break;
+            }
 
-	private static File syncAssets(File assetDir, String indexName) throws JsonSyntaxException, JsonIOException, IOException
-	{
-	    Logger.logInfo("Syncing Assets:");
-	    File objects = new File(assetDir, "objects");
-	    AssetIndex index = JsonFactory.loadAssetIndex(new File(assetDir, "indexes/{INDEX}.json".replace("{INDEX}", indexName)));
-	    
-	    if (!index.virtual)
-	        return assetDir;
+            String mcDir = mc.getMethod("a", String.class).invoke(null, (Object) "minecraft").toString();
+
+            System.out.println("MCDIR: " + mcDir);
+
+            System.out.println("Launching with applet wrapper...");
+
+            try {
+                Class<?> MCAppletClass = cl.loadClass("net.minecraft.client.MinecraftApplet");
+                Applet mcappl = (Applet) MCAppletClass.newInstance();
+                MinecraftFrame mcWindow = new MinecraftFrame(modPackName, modPackImageName, animationname);
+                mcWindow.start(mcappl, username, password);
+            } catch (InstantiationException e) {
+                Logger.log("Applet wrapper failed! Falling back to compatibility mode.", LogLevel.WARN, e);
+                mc.getMethod("main", String[].class).invoke(null, (Object) new String[] { username, password });
+            }
+        } catch (Throwable t) {
+            Logger.logError("Unhandled error launching minecraft", t);
+        }
+    }
+
+    private static File syncAssets (File assetDir, String indexName) throws JsonSyntaxException, JsonIOException, IOException {
+        Logger.logInfo("Syncing Assets:");
+        File objects = new File(assetDir, "objects");
+        AssetIndex index = JsonFactory.loadAssetIndex(new File(assetDir, "indexes/{INDEX}.json".replace("{INDEX}", indexName)));
+
+        if (!index.virtual)
+            return assetDir;
 
         File targetDir = new File(assetDir, "virtual/" + indexName);
-        
-	    Set<File> old = FileUtils.listFiles(targetDir);
-	    
-	    for (Entry<String, Asset> e : index.objects.entrySet())
-	    {
-	        Asset asset = e.getValue();
-	        File local = new File(targetDir, e.getKey());
-	        File object = new File(objects, asset.hash.substring(0, 2) + "/" + asset.hash);
+
+        Set<File> old = FileUtils.listFiles(targetDir);
+
+        for (Entry<String, Asset> e : index.objects.entrySet()) {
+            Asset asset = e.getValue();
+            File local = new File(targetDir, e.getKey());
+            File object = new File(objects, asset.hash.substring(0, 2) + "/" + asset.hash);
 
             old.remove(local);
-	        
-	        if (local.exists() && !DownloadUtils.fileSHA(local).equals(asset.hash))
-	        {
-	            Logger.logInfo("  Changed: " + e.getKey());
-	            FileUtils.copyFile(object, local, true);
-	        }
-	        else if (!local.exists())
-	        {
+
+            if (local.exists() && !DownloadUtils.fileSHA(local).equals(asset.hash)) {
+                Logger.logInfo("  Changed: " + e.getKey());
+                FileUtils.copyFile(object, local, true);
+            } else if (!local.exists()) {
                 Logger.logInfo("  Added: " + e.getKey());
                 FileUtils.copyFile(object, local);
-	        }
-	    }
+            }
+        }
 
-	    for (File f : old)
-	    {
-	        String name = f.getAbsolutePath().replace(targetDir.getAbsolutePath(), "");
-	        Logger.logInfo("  Removed: " + name.substring(1));
-	        f.delete();
-	    }
+        for (File f : old) {
+            String name = f.getAbsolutePath().replace(targetDir.getAbsolutePath(), "");
+            Logger.logInfo("  Removed: " + name.substring(1));
+            f.delete();
+        }
 
-	    return targetDir;
-	}
+        return targetDir;
+    }
 }
