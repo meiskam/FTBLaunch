@@ -14,8 +14,8 @@ public class Locations {
     public static final String chRepo = new String("http://new.creeperrepo.net");
     public static final String curseRepo = new String("http://ftb.cursecdn.com");
     //this changes based on the primary automatic server in the balancing logic
-    public static String masterRepo = new String("http://new.creeperrepo.net");
-    public static String masterRepoNoHTTP = new String("new.creeperrepo.net");
+    public static String masterRepo = new String("http://repo.feed-the-dojo.incraftion.com");
+    public static String masterRepoNoHTTP = new String("repo.feed-the-dojo.incraftion.com");
     // used in mirroring logic
     public static boolean primaryCH = true;
 

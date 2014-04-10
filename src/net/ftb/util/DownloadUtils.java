@@ -335,7 +335,7 @@ public class DownloadUtils extends Thread {
                 LoadingDialog.setProgress(90);
 
                 if (downloadServers.size() == 0) {
-                    Logger.logError("Could not find any working mirrors! If you are running a software firewall please allow the FTB Launcher permission to use the internet.");
+                    Logger.logError("Could not find any working mirrors! If you are running a software firewall please allow the FTD Launcher permission to use the internet.");
 
                     // Fall back to new. (old system) on critical failure
                     downloadServers.put("Automatic", Locations.masterRepoNoHTTP);

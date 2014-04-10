@@ -199,7 +199,7 @@ public class LaunchFrame extends JFrame {
         DownloadUtils thread = new DownloadUtils();
         thread.start();
 
-        Logger.logInfo("FTBLaunch starting up (version " + version + ")");
+        Logger.logInfo("FTDLaunch starting up (version " + version + ")");
         Logger.logInfo("Java version: " + System.getProperty("java.version"));
         Logger.logInfo("Java vendor: " + System.getProperty("java.vendor"));
         Logger.logInfo("Java home: " + System.getProperty("java.home"));
@@ -1601,7 +1601,7 @@ public class LaunchFrame extends JFrame {
         int i = 0;
         BufferedReader reader = null;
         try {
-            reader = new BufferedReader(new InputStreamReader(new URL("http://launcher.feed-the-beast.com/newsupdate.php").openStream()));
+            reader = new BufferedReader(new InputStreamReader(new URL("http://launcher.feed-the-dojo.incraftion.com/newsupdate/").openStream()));
             ArrayList<Long> timeStamps = new ArrayList<Long>();
             String s = reader.readLine();
             s = s.trim();
